@@ -19,7 +19,10 @@ import pysam
 
 file_refseq = "s3:graphy101/genomes/refseq_names.txt"
 
-
+from IPython.display import Markdown, display
+def printmdee(string):
+    display(Markdown(string))
+    
 def graphRefseq(refseqid,
                 xlim=False,
                 strand=False,
@@ -356,6 +359,8 @@ def get_wig_data(bigwigfiles,wignames,chrom,start,stop):
 def get_depth_data(track_files,track_names,chrom,start,stop,strand,track_type):
     from ipywidgets import FloatProgress
     from IPython.display import display
+    from IPython.display import clear_output
+    printmd("Loading...")
     f = FloatProgress(min=0, max=100)
     display(f)
     f.value = 0
@@ -381,6 +386,7 @@ def get_depth_data(track_files,track_names,chrom,start,stop,strand,track_type):
             df = df.set_index('pos')
             del df.index.name
             f.value = f.value + 25
+            clear_output()
             return df
 
 
@@ -429,7 +435,7 @@ def plot(figwidth,figheight,refseqtrack,LeftToRight,strand,depths,
 
     ###### RUN TO PLOT! ######
 
-    print("Figure will be saved as: %s%s%s.%s"% (output_folder,geneid,outputsuffix,outputformat))
+    printmd("Figure will be saved as: %s%s%s.%s"% (output_folder,geneid,outputsuffix,outputformat))
     
     # DON'T MODIFY
     # Note: Need to clean up
@@ -563,7 +569,7 @@ def plot(figwidth,figheight,refseqtrack,LeftToRight,strand,depths,
             bedannotations = zip(bedlabels,bedregions)
             bedannotations = sorted(bedannotations)
             bedannotations = list(i for i,_ in itertools.groupby(bedannotations))
-            print("======\nRegions\n======")
+            printmd("======\nRegions\n======")
             for label,x in bedannotations:
                 print(label,x)
                 if annotate_bed:
