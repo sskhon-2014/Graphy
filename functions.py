@@ -20,7 +20,7 @@ import pysam
 file_refseq = "s3:graphy101/genomes/refseq_names.txt"
 
 from IPython.display import Markdown, display
-def printmdee(string):
+def printmd(string):
     display(Markdown(string))
     
 def graphRefseq(refseqid,
