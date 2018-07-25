@@ -368,16 +368,21 @@ def get_depth_data(track_files,track_names,chrom,start,stop,strand,track_type):
         raise NameError("Pick one .bam alignment!")
     for n,track_file in enumerate(track_files):
         for n,track_name in enumerate(track_names):
-            f.value = f.value + 10
-            download_file = 'https://s3-us-west-1.amazonaws.com/graphy101/' + track_file.split('/')[1] + '/' + track_file.split('/')[2]
-            f.value = f.value + 10 
-            download_file2 = 'https://s3-us-west-1.amazonaws.com/graphy101/' + track_file.split('/')[1] + '/' + track_file.split('/')[2] + '.bai'
-            f.value = f.value + 10
-            data1 = urllib.request.urlretrieve(download_file, filename='Data/' + track_file.split('/')[2])
-            
-            data2 = urllib.request.urlretrieve(download_file2, filename='Data/' + track_file.split('/')[2] + '.bai')
-            f.value = f.value + 20 
-            bamfile = pysam.AlignmentFile('Data/' + track_file.split('/')[2], index_filename='Data/' + track_file.split('/')[2] + '.bai')
+            if 'My Data: ' not in track_file:
+                f.value = f.value + 10
+                download_file = 'https://s3-us-west-1.amazonaws.com/graphy101/' + track_file.split('/')[1] + '/' + track_file.split('/')[2]
+                f.value = f.value + 10 
+                download_file2 = 'https://s3-us-west-1.amazonaws.com/graphy101/' + track_file.split('/')[1] + '/' + track_file.split('/')[2] + '.bai'
+                f.value = f.value + 10
+                data1 = urllib.request.urlretrieve(download_file, filename='Data/' + track_file.split('/')[2])
+
+                data2 = urllib.request.urlretrieve(download_file2, filename='Data/' + track_file.split('/')[2] + '.bai')
+                f.value = f.value + 20 
+                bamfile = pysam.AlignmentFile('Data/' + track_file.split('/')[2], index_filename='Data/' + track_file.split('/')[2] + '.bai')
+            if 'My Data: ' in track_file:
+                track_file = track_file.split('/')[2].replace('My Data: ', '')
+                bamfile = pysam.AlignmentFile('Data/' + track_file, index_filename='Data/' + track_file + '.bai')
+                
             f.value = f.value + 25
             depths_data = bamfile.count_coverage(chrom,start, stop)
             depths_data = [a + b + c + d for a, b, c, d in zip(depths_data[0].tolist(), depths_data[1].tolist(), depths_data[2].tolist(), depths_data[3].tolist())]
