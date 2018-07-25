@@ -217,7 +217,7 @@ interact(printer,
          continuous_update=False)
 
 
-#Lists the contents of 'GRAPHY_TEST' into list_dir_default_track_folder
+##### Local Files #####################        
 import boto3
 s3 = boto3.resource('s3')
 my_bucket = s3.Bucket('graphy101')
@@ -226,14 +226,24 @@ for object in my_bucket.objects.all():
     if str(object.key)[0:11] == 'GRAPHY_TEST':
             if str(object.key)[12:] != '':
                 list_dir_default_track_folder.append(str(object.key)[12:])
-
-### Select File ###
+                
+### Local Files
+user_uploaded_dir = os.listdir("Data/")
+file_types = ["bam","bw", "png"]
+file_names = []
+for f in user_uploaded_dir:
+    if f.split(".")[-1] in file_types:
+        file_names.append('My Data: ' + f)
+        
+### Add Cloud Files ###
 all_files = list_dir_default_track_folder
 file_types = ["bam","bw"]
-file_names = []
 for f in all_files:
     if f.split(".")[-1] in file_types:
         file_names.append(f)
+        
+        
+##### Local Files #####################  
 file_widget = widgets.SelectMultiple(
     options=file_names,
     disabled=False
